@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Base Converter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #5f2c82, #49a09d);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      color: #f4e7fe;
+    }
+
+    .container {
+      background: linear-gradient(145deg, #6a3093, #a044ff);
+      border-radius: 25px;
+      box-shadow:
+        0 15px 30px rgba(160, 71, 255, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.15);
+      width: 360px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 1.8rem;
+      text-shadow: 0 3px 10px rgba(160, 71, 255, 0.7);
+      letter-spacing: 1.3px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      margin: 0.5rem 0 1.2rem 0;
+      font-size: 1.1rem;
+      border-radius: 15px;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #eee6ff;
+      box-shadow:
+        0 6px 15px rgba(160, 71, 255, 0.3);
+      transition: all 0.3s ease;
+      font-weight: 500;
+      outline: none;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    input::placeholder {
+      color: #d9caff;
+      font-weight: 400;
+    }
+
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 0 20px 4px #b97fff;
+      color: #fff;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #f0c7ff 50%),
+        linear-gradient(135deg, #f0c7ff 50%, transparent 50%);
+      background-position:
+        calc(100% - 25px) calc(1em + 2px),
+        calc(100% - 20px) calc(1em + 2px);
+      background-size: 8px 8px;
+      background-repeat: no-repeat;
+      padding-right: 3rem;
+      font-weight: 600;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-radius: 20px;
+      border: none;
+      color: #5f2c82;
+      background: linear-gradient(90deg, #f7c1ff, #ab70ff);
+      box-shadow:
+        0 10px 25px rgba(171, 112, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      user-select: none;
+      letter-spacing: 1.1px;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #ab70ff, #f7c1ff);
+      box-shadow:
+        0 15px 40px rgba(171, 112, 255, 0.9);
+      color: #fff;
+    }
+
+    #result {
+      margin-top: 2rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 1.2px;
+      color: #f0d1ff;
+      text-shadow: 0 0 12px #d17fff;
+      min-height: 2.6rem;
+    }
+
+    /* subtle floating animation on container */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .container {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        width: 90vw;
+        padding: 2rem 1.8rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 0.65rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container" role="main" aria-label="Base Converter Application">
+    <h1>Base Converter</h1>
+
+    <input
+      id="inputValue"
+      type="text"
+      placeholder="Enter your number"
+      aria-label="Number input"
+      autocomplete="off"
+      spellcheck="false"
+    />
+
+    <select id="fromBase" aria-label="Select base to convert from">
+      <option value="2">Binary (2)</option>
+      <option value="10" selected>Decimal (10)</option>
+      <option value="16">Hexadecimal (16)</option>
+    </select>
+
+    <select id="toBase" aria-label="Select base to convert to">
+      <option value="2">Binary (2)</option>
+      <option value="10">Decimal (10)</option>
+      <option value="16" selected>Hexadecimal (16)</option>
+    </select>
+
+    <button type="button" onclick="doConvert()">Convert</button>
+
+    <p id="result" aria-live="polite"></p>
+  </main>
+
+  <script>
+    function convertBase(value, fromBase, toBase) {
+      const decimal = parseInt(value, fromBase);
+      if (isNaN(decimal)) return 'Invalid input!';
+      return decimal.toString(toBase).toUpperCase();
+    }
+
+    function doConvert() {
+      const val = document.getElementById('inputValue').value.trim();
+      const fromBase = parseInt(document.getElementById('fromBase').value);
+      const toBase = parseInt(document.getElementById('toBase').value);
+
+      const output = convertBase(val, fromBase, toBase);
+      document.getElementById('result').textContent = output === 'Invalid input!' ? output : `Result: ${output}`;
+    }
+  </script>
+
+</body>
+</html>
